@@ -54,53 +54,98 @@
     </div>
 
     <script>
-        var $level01 = $('.level01');
-        var $subli = $('.level02 li')
-        $level01.click(function(){
+        // var $level01 = $('.level01');
+        // var $subli = $('.level02 li')
+        // $level01.click(function(){
+        //     $level01.not($(this)).removeClass('active');
+        //     $(this).addClass('active');
+
+        //     if($(this).next().hasClass('level02')){
+        //         $(this).next().slideToggle();
+        //         $(this).find('b').toggleClass('rotate0');
+        //     }else{
+        //         $subli.removeClass('active'); 
+        //     }
+        // })
+
+        // $subli.click(function(){
+        //     $subli.not($(this)).removeClass('active');
+        //     $(this).addClass('active');
+
+        //     if(!$(this).parent().prev().hasClass('active')){
+        //         $level01.removeClass('active');
+        //         $(this).parent().prev().addClass('active');
+        //     }
+        // })
+
+        // function resizeFrame(){
+        //     var frame_w = $('#main_body').outerWidth();
+		// 	var frame_h = $('#main_body').outerHeight();
+		// 	$('#main_frame').css({'width':frame_w,'height':frame_h});
+        // }
+
+        // resizeFrame();
+
+        // $(window).resize(function(){
+        //     resizeFrame();
+        // })
+
+
+        // function setMenu(m,n){
+        //    $level01.eq(m).addClass('active').siblings().not('.level02').removeClass('active');
+        //    if(m!=1){              
+        //       $('.level02').slideUp(); 
+        //    }else{
+        //       $('.level02').slideDown();
+        //       $('.level02').children().eq(n).addClass('active').siblings().removeClass('active');
+        //    }
+        // }
+        let $level01 = $('.level01');
+        let $subli = $('.level02 li')
+        $level01.click( ()=> {
             $level01.not($(this)).removeClass('active');
             $(this).addClass('active');
 
-            if($(this).next().hasClass('level02')){
+            if ($(this).next().hasClass('level02')) {
                 $(this).next().slideToggle();
                 $(this).find('b').toggleClass('rotate0');
-            }else{
-                $subli.removeClass('active'); 
+            } else {
+                $subli.removeClass('active');
             }
         })
 
-        $subli.click(function(){
+        $subli.click( ()=>{
             $subli.not($(this)).removeClass('active');
             $(this).addClass('active');
 
-            if(!$(this).parent().prev().hasClass('active')){
+            if (!$(this).parent().prev().hasClass('active')) {
                 $level01.removeClass('active');
                 $(this).parent().prev().addClass('active');
             }
         })
 
-        function resizeFrame(){
-            var frame_w = $('#main_body').outerWidth();
-			var frame_h = $('#main_body').outerHeight();
-			$('#main_frame').css({'width':frame_w,'height':frame_h});
+        resizeFrame = () => {
+            let frame_w = $('#main_body').outerWidth();
+            let frame_h = $('#main_body').outerHeight();
+            $('#main_frame').css({ 'width': frame_w, 'height': frame_h });
         }
 
         resizeFrame();
 
-        $(window).resize(function(){
+        $(window).resize(() => {
             resizeFrame();
         })
 
 
-        function setMenu(m,n){
-           $level01.eq(m).addClass('active').siblings().not('.level02').removeClass('active');
-           if(m!=1){              
-              $('.level02').slideUp(); 
-           }else{
-              $('.level02').slideDown();
-              $('.level02').children().eq(n).addClass('active').siblings().removeClass('active');
-           }
+        setMenu = (m, n) => {
+            $level01.eq(m).addClass('active').siblings().not('.level02').removeClass('active');
+            if (m != 1) {
+                $('.level02').slideUp();
+            } else {
+                $('.level02').slideDown();
+                $('.level02').children().eq(n).addClass('active').siblings().removeClass('active');
+            }
         }
-
     </script>
     <!-- 引入config.js模块 -->
     <script src="./js/util/config.js"></script>
@@ -112,29 +157,60 @@
         // 1. 用户退出
         // 思路：
         // 请求  退出接口
-        $('#btnLogout').click(function(){
-            // 用户退出
-            user.logout().then(function(res){
-                console.log(res);
-                if(res.code === 200){
-                    alert('成功退出')
-                    window.location.href = "./login.html"
+        // $('#btnLogout').click(function(){
+        //     // 用户退出
+        //     user.logout().then(function(res){
+        //         console.log(res);
+        //         if(res.code === 200){
+        //             alert('成功退出')
+        //             window.location.href = "./login.html"
+        //         } else {
+        //             alert(res.msg)
+        //         }
+        //     })
+        // })
+
+        // // 2. 获取管理员信息并显示
+        // user.getInfo().then(function(res){
+        //     console.log(res)
+        //     if(res.code === 200){
+        //         // 显示内容
+        //         $('#userName').text( res.data.nickname )
+        //         $('.userImg').attr('src',res.data.user_pic )
+        //     }
+        // })
+        // 用户登出
+        $("#logout").click(() => {
+            
+            user.logout().then(res => {
+                let {
+                    code,
+                    msg
+                } = res
+                if (code === 200) {
+                    bootbox.alert('退出成功')
+                    window.location.href = './login.html'
                 } else {
-                    alert(res.msg)
+                    bootbox.alert(msg)
                 }
             })
         })
 
-        // 2. 获取管理员信息并显示
-        user.getInfo().then(function(res){
-            console.log(res)
-            if(res.code === 200){
-                // 显示内容
-                $('#userName').text( res.data.nickname )
-                $('.userImg').attr('src',res.data.user_pic )
-            }
-        })
-        
+        // 获取管理员信息，并显示
+        user.logInfo().then(res => {
+                let {
+                    code,
+                    msg,
+                    data
+                } = res
+                if (code === 200) {
+                    $("#userName").text(data.nickname);
+                    $(".user_pic").attr('src', data.user_pic)
+                } else {
+                    bootbox.alert(msg)
+                }
+
+            })
     </script>
 
 </body>
