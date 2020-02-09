@@ -209,101 +209,244 @@
     
     <script>
 
-        dayjs.locale('zh-cn') ; // 全局设置，中文
-        // 使用插件
-        dayjs.extend(dayjs_plugin_relativeTime);
+        // dayjs.locale('zh-cn') ; // 全局设置，中文
+        // // 使用插件
+        // dayjs.extend(dayjs_plugin_relativeTime);
 
 
-        // 1. 获取从地址栏中传入的文章编号
-        // http://127.0.0.1:5500/web_front/article.html?id=1576408259770
-        // location.search  : ?id=1576408259770
-        // location.search.substr(4): 从下标为4的地方开始取子字符串，直到结束
-        var id = location.search.substr(4)
-        // alert(id)
+        // // 1. 获取从地址栏中传入的文章编号
+        // // http://127.0.0.1:5500/web_front/article.html?id=1576408259770
+        // // location.search  : ?id=1576408259770
+        // // location.search.substr(4): 从下标为4的地方开始取子字符串，直到结束
+        // var id = location.search.substr(4)
+        // // alert(id)
 
-        // 2. 调用接口，获取这篇文章的详情，显示到页面上
-        article.getDetail(id).then(function(res){
-            console.log(res);
-            if(res.code == 200){
-                var t = res.data
-                // 给对应的dom元素赋值
-                $('#author').html( t.author);
-                $('#comment').html(t.comment);
-                $('#content').html(t.content);
-                $('#date').html(t.date);
-                //上，下文章导航
-                // 有的文章有一篇，有的可能没有，所以要先判断一下。
-                if(t.prev) {
-                    $('#prev').attr('href','./article.html?id='+t.prev.id);
-                    $('#prev').text(t.prev.title);
-                } else {
-                    $('#prev').text('无');
-                }
-                if(t.next) {
-                    $('#next').attr('href','./article.html?id='+t.next.id)
-                    $('#next').text(t.next.title)
-                }else {
-                    $('#next').text('无');
-                }
+        // // 2. 调用接口，获取这篇文章的详情，显示到页面上
+        // article.getDetail(id).then(function(res){
+        //     console.log(res);
+        //     if(res.code == 200){
+        //         var t = res.data
+        //         // 给对应的dom元素赋值
+        //         $('#author').html( t.author);
+        //         $('#comment').html(t.comment);
+        //         $('#content').html(t.content);
+        //         $('#date').html(t.date);
+        //         //上，下文章导航
+        //         // 有的文章有一篇，有的可能没有，所以要先判断一下。
+        //         if(t.prev) {
+        //             $('#prev').attr('href','./article.html?id='+t.prev.id);
+        //             $('#prev').text(t.prev.title);
+        //         } else {
+        //             $('#prev').text('无');
+        //         }
+        //         if(t.next) {
+        //             $('#next').attr('href','./article.html?id='+t.next.id)
+        //             $('#next').text(t.next.title)
+        //         }else {
+        //             $('#next').text('无');
+        //         }
 
 
-                $('#read').html(t.read);
-                $('#title').html(t.title);
-                $('#type_name').html(t.type_name);
+        //         $('#read').html(t.read);
+        //         $('#title').html(t.title);
+        //         $('#type_name').html(t.type_name);
 
-            } 
-        })
+        //     } 
+        // })
 
-        // 3. 获取并显示评论
-        getComment()
-        // 4. 添加评论
-        $('#btn').click(function(){
-            // - 收集用户信息
-            var name = $('#comment_name').val().trim()
-            var content = $('#comment_content').val().trim()
+        // // 3. 获取并显示评论
+        // getComment()
+        // // 4. 添加评论
+        // $('#btn').click(function(){
+        //     // - 收集用户信息
+        //     var name = $('#comment_name').val().trim()
+        //     var content = $('#comment_content').val().trim()
 
-            if(name.length === 0 || content.length ===0){
-                bootbox.alert("不能为空");
-                return;
-            }
+        //     if(name.length === 0 || content.length ===0){
+        //         bootbox.alert("不能为空");
+        //         return;
+        //     }
 
-            // - 调用接口，根据反馈做后续动作
-            comment.add(name,content, id).then(function(res){
-                console.log(res);
-                if(res.code === 200) {
-                    // 评论成功
-                    // 1. 清空评论区域
-                    $('#comment_name').val('')
-                    $('#comment_content').val('')
-                    // 2. 去重新加载评论并显示
-                    getComment()
-                }
-            })
-        })
+        //     // - 调用接口，根据反馈做后续动作
+        //     comment.add(name,content, id).then(function(res){
+        //         console.log(res);
+        //         if(res.code === 200) {
+        //             // 评论成功
+        //             // 1. 清空评论区域
+        //             $('#comment_name').val('')
+        //             $('#comment_content').val('')
+        //             // 2. 去重新加载评论并显示
+        //             getComment()
+        //         }
+        //     })
+        // })
     
 
-        function getComment(){
-            comment.get(id).then(function(res){
-                if(res.code ==200){
-                    // 对每一条留言中的dt进行格式化
-                    // 具体就是从 时间戳 转成相对时间
-                    res.data.forEach(function(item){
-                        // item.relativeTime = item.dt --->相对时间
-                        // item.relativeTime = getRelativeTime(item.dt)
-                        item.relativeTime =  dayjs(item.dt).fromNow()
+        // function getComment(){
+        //     comment.get(id).then(function(res){
+        //         if(res.code ==200){
+        //             // 对每一条留言中的dt进行格式化
+        //             // 具体就是从 时间戳 转成相对时间
+        //             res.data.forEach(function(item){
+        //                 // item.relativeTime = item.dt --->相对时间
+        //                 // item.relativeTime = getRelativeTime(item.dt)
+        //                 item.relativeTime =  dayjs(item.dt).fromNow()
                         
-                    })
-                    console.log(res.data);
-                    var htmlStr = template('tmp', res)
-                    $('#comment_list').html( htmlStr )
+        //             })
+        //             console.log(res.data);
+        //             var htmlStr = template('tmp', res)
+        //             $('#comment_list').html( htmlStr )
+        //         }
+        //     })
+        // }
+
+        // // 创建一个函数，专门用来把时间戳转成相对时间 
+        // function getRelativeTime(dt){
+        //     return dayjs(dt).fromNow();
+        // }
+        let id = window.location.search.substr(4);
+
+        // 时间处理插件初始化
+        dayjs.locale('zh-cn');
+        dayjs.extend(dayjs_plugin_relativeTime);
+
+        // 获取文章类型列表
+        category.get().then(res => {
+            let {
+                code,
+                msg,
+            } = res
+            if (code === 200) {
+                // 补充数据
+                res.curId = id
+                // 导航栏文章类别模板
+                let htmlStr = template('tem_cate', res)
+                $(".level_two").append(htmlStr)
+                $(".left_menu").html(htmlStr)
+            } else {
+                // alert(res.msg)
+                bootbox.alert(msg)
+            }
+        })
+
+        // 文章信息
+        article.getById(id).then(res => {
+            let {
+                code,
+                msg,
+                data
+            } = res
+            if (code === 200) {
+                let {
+                    title,
+                    author,
+                    date,
+                    type_name,
+                    comment,
+                    content,
+                    next,
+                    prev,
+                    read,
+                    type_id
+                } = data
+
+                // 一周热门排行
+                article.rank(type_id).then(res => {
+                    let {
+                        code,
+                        msg,
+                    } = res
+                    if (code === 200) {
+
+                        // 热门排行模板
+                        let htmlStr = template('aaa', res)
+                        $("#hot_rank").html(htmlStr)
+                    } else {
+                        bootbox.alert(msg)
+                    }
+                })
+
+                // 文章标题
+                $("#title").text(title);
+                // 作者
+                $("#author").text(author);
+                // 发布时间
+                $("#date").text(date);
+                // 文章分类
+                $("#type_name").text(type_name);
+                // 阅读量
+                $("#read").text(read);
+                // 评论数量
+                $("#comment").text(comment);
+                // 文章内容
+                $("#content").html(content);
+                // 上一篇
+                if (next) {
+                    $("#next").attr('href', 'article.html?id=' + next.id);
+                    $("#next").text(next.title)
+                } else {
+                    $("#next").text('无')
+                }
+                // 下一篇
+                if (prev) {
+                    $("#prev").attr('href', "article.html?id=" + prev.id);
+                    $("#prev").text(prev.title)
+                } else {
+                    $("#prev").text('无')
+                }
+            } else {
+                bootbox.alert(msg)
+            }
+        })
+
+        // 获取评论并显示
+        function getComment() {
+            comment.get(id).then(res => {
+                let {
+                    code,
+                    msg,
+                    data
+                }=res
+                
+                if (code === 200) {
+                    // 处理评论时间戳
+                    data.forEach(item => item.relativeTime = dayjs(item.dt).fromNow())
+
+                    let htmlStr = template('tem_com_list', res);
+
+                    $("#com_list").html('')
+                    $("#com_list").html(htmlStr)
+                } else {
+                    bootbox.alert(msg)
                 }
             })
         }
+        getComment()
 
-        // 创建一个函数，专门用来把时间戳转成相对时间 
-        function getRelativeTime(dt){
-            return dayjs(dt).fromNow();
-        }
+        // 添加评论
+        // 添加点击事件
+        $("#comment_btn").click(() => {
+            let name = $("#comment_name").val();
+            let content = $("#comment_content").val();
+            // 判空
+            if (!name || !content) {
+                bootbox.alert('不能为空')
+                return
+            }
+            comment.add(name, content, id).then(res => {
+                let {
+                    code,
+                    msg,
+                }= res
+                if (code === 200) {
+                    bootbox.alert(msg);
+                    getComment()
+                } else {
+                    bootbox.alert(msg)
+                }
+            })
+
+        })
     </script>
 
 </body>
