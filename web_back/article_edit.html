@@ -98,83 +98,148 @@
         //      http://127.0.0.1:5500/web_back/article_edit.html?id=1580870111528
         // window.location.search：获取当前页面的url信息中查询字符串的值
         //      ?id=1580870111528
-        console.log(window.location);
-        console.log(window.location.search); // ?id=1580870111528
-        // str.substr(起始下标，取出多长) 如果省略第二个参数就是取出从起点开始到结束的全部
+        // console.log(window.location);
+        // console.log(window.location.search); // ?id=1580870111528
+        // // str.substr(起始下标，取出多长) 如果省略第二个参数就是取出从起点开始到结束的全部
 
-        // 2. 根据id去取回这篇文章的信息，并显示在页面上
-        var id = window.location.search.substr(4)
+        // // 2. 根据id去取回这篇文章的信息，并显示在页面上
+        // var id = window.location.search.substr(4)
         
-        getAndShowCategory()
-        // 3. 实现保存编辑
-        $('#saveBtn').click(function(){
-            // - 收集数据
-            var fd = new FormData(document.getElementById('form'))
-            // 要获取formdate中的数据，注意把name属性设置成与接口中的参数一一对应。
+        // getAndShowCategory()
+        // // 3. 实现保存编辑
+        // $('#saveBtn').click(function(){
+        //     // - 收集数据
+        //     var fd = new FormData(document.getElementById('form'))
+        //     // 要获取formdate中的数据，注意把name属性设置成与接口中的参数一一对应。
 
-            // 追加id
-            fd.append("id", id)
-            fd.set('content', tinymce.activeEditor.getContent())
-            article.edit(fd).then(function(res){
-                console.log(res);
-                if(res.code === 200){
-                    alert("保存成功")
-                } else {
-                    alert(res.msg)
-                }
+        //     // 追加id
+        //     fd.append("id", id)
+        //     fd.set('content', tinymce.activeEditor.getContent())
+        //     article.edit(fd).then(function(res){
+        //         console.log(res);
+        //         if(res.code === 200){
+        //             alert("保存成功")
+        //         } else {
+        //             alert(res.msg)
+        //         }
                 
-            })
-            // - 调用接口
-            // - 根据接口反馈做后续动作
-        })
+        //     })
+        //     // - 调用接口
+        //     // - 根据接口反馈做后续动作
+        // })
 
 
-        // 接下来要调用接口去取信息
-        function getAndShow(id) {
-            article.getById(id).then(function(res){
-                console.log(res);
-                if(res.code === 200){
-                    // 把结果显示在页面上：把数据填入到表单中
-                    $('#title').val( res.data.title )
-                    $('#previewImg').attr('src', res.data.cover )
-                    $('#dateinput').val(res.data.date)
+        // // 接下来要调用接口去取信息
+        // function getAndShow(id) {
+        //     article.getById(id).then(function(res){
+        //         console.log(res);
+        //         if(res.code === 200){
+        //             // 把结果显示在页面上：把数据填入到表单中
+        //             $('#title').val( res.data.title )
+        //             $('#previewImg').attr('src', res.data.cover )
+        //             $('#dateinput').val(res.data.date)
 
-                    $('#type').val(res.data.type)
+        //             $('#type').val(res.data.type)
                     
-                    // 给富文件编辑器，设置内容
-                    setTimeout (function(){
-                        // tinymce.activeEditor.setContent能生效的前提是
-                        // 富文本编辑器已经就绪了。如果说ajax数据回来了，但是富文本编辑器还没有绪
-                        // 它就可以会报错，所以给它加一点延迟。
-                        tinymce.activeEditor.setContent( res.data.content )
-                    },1000)
-                } else {
-                    alert(res.msg)
-                } 
-            })
-        }
+        //             // 给富文件编辑器，设置内容
+        //             setTimeout (function(){
+        //                 // tinymce.activeEditor.setContent能生效的前提是
+        //                 // 富文本编辑器已经就绪了。如果说ajax数据回来了，但是富文本编辑器还没有绪
+        //                 // 它就可以会报错，所以给它加一点延迟。
+        //                 tinymce.activeEditor.setContent( res.data.content )
+        //             },1000)
+        //         } else {
+        //             alert(res.msg)
+        //         } 
+        //     })
+        // }
         
-        function getAndShowCategory(){
-            category.get().then(function(res){
-                console.log(res);
-                if(res.code ===200){
-                    var htmlStr = template('cate',res)
-                    console.log(htmlStr);
-                    // 写入select
-                    $('#type').html( htmlStr )
-                    // 让一个下拉框选中指定的文章的类型
-                    // $('#type').val(1580867650235)
+        // function getAndShowCategory(){
+        //     category.get().then(function(res){
+        //         console.log(res);
+        //         if(res.code ===200){
+        //             var htmlStr = template('cate',res)
+        //             console.log(htmlStr);
+        //             // 写入select
+        //             $('#type').html( htmlStr )
+        //             // 让一个下拉框选中指定的文章的类型
+        //             // $('#type').val(1580867650235)
 
-                    // 类别获取完成之后，再去获取并显示文章详情
-                    getAndShow(id)
-                }else{
-                    alert(res.msg)
-                }
+        //             // 类别获取完成之后，再去获取并显示文章详情
+        //             getAndShow(id)
+        //         }else{
+        //             alert(res.msg)
+        //         }
                 
-            })
-        }
+        //     })
+        // }
 
-        
+        let id = window.location.search.substr(4)
+    // 编辑页面的数据渲染
+     getAndShow = () => {
+        article.getById(id).then(res => {
+            let {
+                code,
+                msg,
+                data
+            } = res
+            if (code === 200) {
+                let {
+                    title,
+                    cover,
+                    date,
+                    type,
+                    content,
+                } = data
+                $("#title").val(title);
+                $("#previewImg").attr('src', cover);
+                $("#dateinput").val(date);
+                $("#cate").val(type)
+
+                // 富文本编辑器内容
+                setTimeout( () => {
+                    tinymce.activeEditor.setContent(content)
+                }, 1000)
+            } else {
+                botbox.alert(msg)
+            }
+        })
+    }
+
+    // 所有分类
+    category.get().then(res => {
+        let {
+            code,
+            msg,
+        } = res
+        if (code === 200) {
+            let htmlStr = template('category', res)
+            $("#cate").html(htmlStr);
+            getAndShow()
+        } else {
+            botbox.alert(msg)
+        }
+    })
+
+    // 点击修改，请求接口
+
+    $("#save").click( () => {
+        let fd = new FormData(document.getElementById('form'));
+        fd.append('id', id)
+        // 获取富文本的内容
+        fd.set('content', tinyMCE.activeEditor.getContent())
+        article.edit(fd).then(res => {
+            let {
+                code,
+                msg,
+            } = res
+            if (code === 200) {
+                botbox.alert('修改成功')
+            } else {
+                botbox.alert(msg)
+            }
+        })
+    })
     </script>
 </body>
 </html>
