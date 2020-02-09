@@ -3,32 +3,65 @@
 
 // 所有接口的基地址
 // 就是运行小黑窗服务器的地址.如果当前的服务器就是在自已电脑上，就可以直接写成localhost
-var BASEURL = 'http://localhost:8000'
-// var BASEURL = 'http://192.168.0.108:8000'
-var BASEURL = 'http://39.99.130.177:8000'
+// var BASEURL = 'http://localhost:8000'
+// // var BASEURL = 'http://192.168.0.108:8000'
+// var BASEURL = 'http://39.99.130.177:8000'
 
-// 用来保存所有的接口信息
-var APILIST = {
+// // 用来保存所有的接口信息
+// var APILIST = {
+//     user_login: BASEURL + '/admin/login',
+//     user_logout: BASEURL + '/admin/logout',
+//     user_getInfo: BASEURL + '/admin/getuser',
+
+//     // 获取文章分类
+//     category_get:  BASEURL + '/admin/category_search',
+//     // 添加文章分类
+//     category_add:  BASEURL + '/admin/category_add',
+//     // 删除文章分类
+//     category_del:  BASEURL + '/admin/category_delete',
+//     // 编辑文章分类
+//     category_edit:  BASEURL + '/admin/category_edit',
+
+
+//     // 获取文章
+//     article_get: BASEURL + '/admin/search',
+//     // 删除文章
+//     article_del: BASEURL + '/admin/article_delete',
+//     // 添加文章
+//     article_add: BASEURL + '/admin/article_publish',
+//     // 保存文章的修改
+//     article_edit: BASEURL + '/admin/article_edit'
+// }
+const BASEURL = 'http://localhost:8000'
+// const BASEURL = 'http://192.168.1.106:8000'
+// const BASEURL = 'http://39.99.130.170:8000'
+
+// 所有子接口
+
+const APILIST = {
+    // 用户登录接口
     user_login: BASEURL + '/admin/login',
     user_logout: BASEURL + '/admin/logout',
-    user_getInfo: BASEURL + '/admin/getuser',
+    user_Info: BASEURL + '/admin/getuser',
 
-    // 获取文章分类
-    category_get:  BASEURL + '/admin/category_search',
-    // 添加文章分类
-    category_add:  BASEURL + '/admin/category_add',
-    // 删除文章分类
-    category_del:  BASEURL + '/admin/category_delete',
-    // 编辑文章分类
-    category_edit:  BASEURL + '/admin/category_edit',
+    // 文章类别管理接口
+    // 显示
+    category_get: BASEURL + '/admin/category_search',
+    // 新增
+    category_add: BASEURL + '/admin/category_add',
+    // 删除‘
+    category_del: BASEURL + '/admin/category_delete',
+    // 编辑
+    category_edit: BASEURL + '/admin/category_edit',
 
+    // 文章列表接口
+    // 获取
+    article_get:BASEURL + '/admin/search',
+    // 删除
+    article_del:BASEURL + '/admin/article_delete',
+    // 发布文章
+    article_add:BASEURL + '/admin/article_publish',
+    // 编辑文章
+    article_edit:BASEURL + '/admin/article_edit',
 
-    // 获取文章
-    article_get: BASEURL + '/admin/search',
-    // 删除文章
-    article_del: BASEURL + '/admin/article_delete',
-    // 添加文章
-    article_add: BASEURL + '/admin/article_publish',
-    // 保存文章的修改
-    article_edit: BASEURL + '/admin/article_edit'
 }
