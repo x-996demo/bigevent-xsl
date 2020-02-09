@@ -151,131 +151,244 @@
     </script>
     <script>
         // 1. 从接口中取出数据，显示在表格中
-        getAndShow()
-        function getAndShow() {
-            category.get().then(function(res){
-                // 用模板引擎渲染数据
-                var htmlStr = template('tmp_cate', res)
-                console.log(htmlStr);
-                // 把html结构显示在tbody
-                $('#category_table').html( htmlStr )
-            })
-        }
+        // getAndShow()
+        // function getAndShow() {
+        //     category.get().then(function(res){
+        //         // 用模板引擎渲染数据
+        //         var htmlStr = template('tmp_cate', res)
+        //         console.log(htmlStr);
+        //         // 把html结构显示在tbody
+        //         $('#category_table').html( htmlStr )
+        //     })
+        // }
         
 
-        // 2. 添加功能
-        // 这里用到了bootstrap的模态框 https://v4.bootcss.com/docs/components/modal/
-        // 它会在页面上弹出一个对话框
-        // 点击添加按钮：
-        // (1) 收集用户信息, 简单判断
-        // (2) 发请求，根据反馈，做后续操作
-        $('#model_add').click(function(){
-            var name = $('#name').val().trim()
-            var slug = $('#slug').val().trim()
+        // // 2. 添加功能
+        // // 这里用到了bootstrap的模态框 https://v4.bootcss.com/docs/components/modal/
+        // // 它会在页面上弹出一个对话框
+        // // 点击添加按钮：
+        // // (1) 收集用户信息, 简单判断
+        // // (2) 发请求，根据反馈，做后续操作
+        // $('#model_add').click(function(){
+        //     var name = $('#name').val().trim()
+        //     var slug = $('#slug').val().trim()
 
-            if(name.length === 0 || slug.length === 0){
-                alert('不能为空')
-                return
-            }
+        //     if(name.length === 0 || slug.length === 0){
+        //         alert('不能为空')
+        //         return
+        //     }
 
-            console.log(name,slug);
-            // 调用添加方法
-            category.add(name,slug).then(function(res){
-                console.log(res);
-                if(res.code === 200){
-                    // 添成加功
-                    // (1) 清空用户的输入
-                    $('#name').val('')
-                    $('#slug').val('')
-                    // (2) 隐藏模态框
-                    $('#addModal').modal('hide'); // 把id为addModal的模态框隐藏起来
-                    // (3) 重新获取新数据
-                    getAndShow()
-                } else {
-                    alert(res.msg)
-                }
-            })
+        //     console.log(name,slug);
+        //     // 调用添加方法
+        //     category.add(name,slug).then(function(res){
+        //         console.log(res);
+        //         if(res.code === 200){
+        //             // 添成加功
+        //             // (1) 清空用户的输入
+        //             $('#name').val('')
+        //             $('#slug').val('')
+        //             // (2) 隐藏模态框
+        //             $('#addModal').modal('hide'); // 把id为addModal的模态框隐藏起来
+        //             // (3) 重新获取新数据
+        //             getAndShow()
+        //         } else {
+        //             alert(res.msg)
+        //         }
+        //     })
 
-        })
+        // })
 
-        // 关闭  隐藏模态框
-        $('#model_shutoff').click(function(){
-            $('#addModal').modal('hide')
-        })
+        // // 关闭  隐藏模态框
+        // $('#model_shutoff').click(function(){
+        //     $('#addModal').modal('hide')
+        // })
         
         
-        // 3. 删除
+        // // 3. 删除
 
-        // 思路：用事件委托给 删除 添加点击事件
-        // (1) 获取id
-        // (2) 请求接口，根据反馈，做后续操作
-        $('#category_table').on('click', '.del',function(){
-            // alert(1)
-            // 在生成按钮时，要先设置自定义属性，再在这里获取自定义属性 data-id
-            var id = $(this).attr('data-id')
+        // // 思路：用事件委托给 删除 添加点击事件
+        // // (1) 获取id
+        // // (2) 请求接口，根据反馈，做后续操作
+        // $('#category_table').on('click', '.del',function(){
+        //     // alert(1)
+        //     // 在生成按钮时，要先设置自定义属性，再在这里获取自定义属性 data-id
+        //     var id = $(this).attr('data-id')
 
-            category.del(id).then(function(res){
-                console.log(res);
-                if(res.code === 200){
-                    // 删除成功,重新获取数据
-                    getAndShow()
-                } else {
-                    alert(res.msg)
-                }
-            })
-        })
+        //     category.del(id).then(function(res){
+        //         console.log(res);
+        //         if(res.code === 200){
+        //             // 删除成功,重新获取数据
+        //             getAndShow()
+        //         } else {
+        //             alert(res.msg)
+        //         }
+        //     })
+        // })
 
-        // 4. 编辑 
-        // 思路:
-        // 用事件委托给编辑按钮 添加点击事件
-        // （1）弹出模态框，并显示当前要编辑的内容
-        //  (2) 用户修改，点击保存，发请求，做后续操作
-        $('#category_table').on('click','.edit', function(){
-            // 取出当前要编辑的内容
-            var id = $(this).attr('data-id')
-            var name = $(this).attr('data-name')
-            var slug = $(this).attr('data-slug')
-            // 弹出模态框
-            //  给模态框中的input设置值
-            $('#edit_id').val(id )
-            $('#edit_name').val(name )
-            $('#edit_slug').val(slug )
-            $('#editModal').modal('show') // 弹出模态框
-            // alert(1)
-        })
-        // 点击按钮 保存修改
-        // (1) 收集用户信息, 简单判断
-        // (2) 发请求，根据反馈，做后续操作
-        $('#model_save').click(function(){
-            var id =  $('#edit_id').val().trim()
-            var new_name =  $('#edit_name').val().trim()
-            var new_slug =  $('#edit_slug').val().trim()
+        // // 4. 编辑 
+        // // 思路:
+        // // 用事件委托给编辑按钮 添加点击事件
+        // // （1）弹出模态框，并显示当前要编辑的内容
+        // //  (2) 用户修改，点击保存，发请求，做后续操作
+        // $('#category_table').on('click','.edit', function(){
+        //     // 取出当前要编辑的内容
+        //     var id = $(this).attr('data-id')
+        //     var name = $(this).attr('data-name')
+        //     var slug = $(this).attr('data-slug')
+        //     // 弹出模态框
+        //     //  给模态框中的input设置值
+        //     $('#edit_id').val(id )
+        //     $('#edit_name').val(name )
+        //     $('#edit_slug').val(slug )
+        //     $('#editModal').modal('show') // 弹出模态框
+        //     // alert(1)
+        // })
+        // // 点击按钮 保存修改
+        // // (1) 收集用户信息, 简单判断
+        // // (2) 发请求，根据反馈，做后续操作
+        // $('#model_save').click(function(){
+        //     var id =  $('#edit_id').val().trim()
+        //     var new_name =  $('#edit_name').val().trim()
+        //     var new_slug =  $('#edit_slug').val().trim()
 
-            if(new_name.length === 0 || new_slug.length === 0){
-                alert('不能为空')
-                return
-            }
-            // console.log(id,new_name,new_slug);
-            category.edit(id,new_name,new_slug).then(function(res){
-                if(res.code === 200){
-                    // 编辑成功
-                    // (1) 隐藏模态框
-                    $('#editModal').modal('hide'); // 把id为editModal的模态框隐藏起来
-                    // (2) 重新获取新数据
-                    getAndShow()
-                } else {
-                    alert(res.msg)
-                }
+        //     if(new_name.length === 0 || new_slug.length === 0){
+        //         alert('不能为空')
+        //         return
+        //     }
+        //     // console.log(id,new_name,new_slug);
+        //     category.edit(id,new_name,new_slug).then(function(res){
+        //         if(res.code === 200){
+        //             // 编辑成功
+        //             // (1) 隐藏模态框
+        //             $('#editModal').modal('hide'); // 把id为editModal的模态框隐藏起来
+        //             // (2) 重新获取新数据
+        //             getAndShow()
+        //         } else {
+        //             alert(res.msg)
+        //         }
                 
-            })
-        })
+        //     })
+        // })
 
 
         // $.get('http://192.168.172.82:8000/admin/category_search').then(function(res){
         //     console.log(res);
         //     // 渲染数据
         // })
-        
+        // 文章获取并显示
+        getAndShow = () => {
+            category.get().then(res => {
+                let {
+                    code,
+                    msg,
+                } = res
+                if (code === 200) {
+                    $("#category_tbd").empty()
+                    let htmlStr = template('category_list', res);
+                    // console.log(res);
+
+                    $("#category_tbd").append(htmlStr)
+                    // console.log(htmlStr);
+
+                } else {
+                    bootbox.alert(msg)
+                }
+            })
+        }
+
+        getAndShow();
+        // 文章类别新增
+        $("#model_add").on('click', () => {
+            let name = $("#name").val().trim();
+            let sulg = $("#sulg").val().trim();
+            if (name === "" || sulg === '') {
+                bootbox.alert("不能为空")
+            }
+            category.add(name, sulg).then(res => {
+                let {
+                    code,
+                    msg,
+                } = res
+                // 清空用户输入
+                $("#name").val("");
+                $("#sulg").val("");
+                // 隐藏模态框
+                $('#addModal').modal('hide');
+                // 重新获取数据
+                if (code === 200) {
+                    // bootbox.alert("增加成功")
+                    getAndShow()
+                } else {
+                    bootbox.alert(msg)
+                }
+            })
+        })
+        // 点击关闭 隐藏模态框
+        $("#model_shutoff").click( () => $('#addModal').modal('hide'))
+
+        // 文章类别删除
+        // 事件委托
+        $("#category_tbd").on('click', '#del', function () {
+            if (!confirm('确定删除吗？')) {
+                return
+            }
+            let id = $(this).attr('data-id');
+
+            // bootbox.alert($(this).attr('data-id'))
+            category.del(id).then(res => {
+                let {
+                    code,
+                    msg,
+                } = res
+                if (code === 200) {
+                    // bootbox.alert(msg)
+                    getAndShow()
+                } else {
+                    bootbox.alert(msg)
+                }
+
+            })
+        })
+
+        // 文章类别编辑
+        // 事件委托
+        $("#category_tbd").on('click', '#edit', function () {
+            let id = $(this).attr("data-id");
+            let name = $(this).attr("data-name");
+            let slug = $(this).attr("data-slug");
+            // 显示编辑模态框
+            $("#edit_id").val(id);
+            $("#edit_name").val(name);
+            $("#edit_slug").val(slug);
+            $("#editModal").modal('show');
+        })
+        // 点击保存，请求接口
+        $("#model_save").click( () => {
+            let id = $("#edit_id").val().trim();
+            let new_name = $("#edit_name").val().trim();
+            let new_slug = $("#edit_slug").val().trim();
+            if (new_name === "" || new_slug === "") {
+                bootbox.alert('不能为空')
+                return
+            } else {
+                category.edit(id, new_name, new_slug).then(res => {
+                    let {
+                    code,
+                    msg,
+                } = res
+                    if (code === 200) {
+                        // 隐藏模态框
+                        $("#editModal").modal('hide');
+                        // 重新获取数据
+                        getAndShow()
+                    } else {
+                        bootbox.alert(msg)
+                    }
+                })
+            }
+        })
+        // 点击关闭，关闭模态框
+        $("#model_shutoff").click( () => $('#editModal').modal('hide'))
     </script>
 
 
