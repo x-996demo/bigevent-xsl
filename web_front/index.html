@@ -226,60 +226,112 @@
     </script>
     <script>
         // 1. 获取文章的类型并显示
-        category.get().then(function(res){
-            console.log(res);
-            // 渲染结构
-            var htmlStr = template('cate', res)
-            // console.log(htmlStr);
-            // 显示
-            // 替换整个容器中的html
-            $('#left_menu').html(htmlStr); 
+        // category.get().then(function(res){
+        //     console.log(res);
+        //     // 渲染结构
+        //     var htmlStr = template('cate', res)
+        //     // console.log(htmlStr);
+        //     // 显示
+        //     // 替换整个容器中的html
+        //     $('#left_menu').html(htmlStr); 
 
-            // 追加一些内容
-            $('#level_two_menu').append(htmlStr ) 
-        })
+        //     // 追加一些内容
+        //     $('#level_two_menu').append(htmlStr ) 
+        // })
 
-        // 2. 显示焦点图
-        //  调用接口，获取数据，template渲染
-        article.getFouceFive().then(function(res){
-            console.log(res);
-            if(res.code === 200){
-                // 渲染
-                var htmlStr = template("focus", res)
-                // console.log(htmlStr);
-                $('#focus_list').html(htmlStr )
+        // // 2. 显示焦点图
+        // //  调用接口，获取数据，template渲染
+        // article.getFouceFive().then(function(res){
+        //     console.log(res);
+        //     if(res.code === 200){
+        //         // 渲染
+        //         var htmlStr = template("focus", res)
+        //         // console.log(htmlStr);
+        //         $('#focus_list').html(htmlStr )
                 
-            } else{
-                alert(res.msg)
-            } 
-        })
+        //     } else{
+        //         alert(res.msg)
+        //     } 
+        // })
 
-        // 3. 显示排行文章
-        //  调用接口，获取数据，template渲染
-        article.getRank().then(function(res){
-            console.log(res);
-            if(res.code === 200){
-                // 渲染
-                var htmlStr = template('tmpRank',res)
-                console.log(htmlStr);
-                $('#rank').html(htmlStr )
+        // // 3. 显示排行文章
+        // //  调用接口，获取数据，template渲染
+        // article.getRank().then(function(res){
+        //     console.log(res);
+        //     if(res.code === 200){
+        //         // 渲染
+        //         var htmlStr = template('tmpRank',res)
+        //         console.log(htmlStr);
+        //         $('#rank').html(htmlStr )
                 
+        //     } else {
+        //         alert(res.msg)
+        //     }
+        // })
+
+        // //4. 最新资讯
+        // article.getLastest().then(function(res){
+        //     console.log(res);
+        //     if(res.code === 200){
+        //         // 渲染
+        //         var htmlStr = template('tmpNews',res)
+        //         console.log(htmlStr);
+        //         $('#news_list').html(htmlStr )
+        //     } else {
+        //         alert(res.msg)
+        //     }
+        // })
+        category.get().then(res => {
+            let {
+                code,
+                msg,
+            } = res
+            if (code === 200) {
+                // 导航栏文章类别模板
+                let htmlStr = template('tem_cate', res)
+                $(".level_two").append(htmlStr)
+                $(".left_menu").html(htmlStr)
             } else {
-                alert(res.msg)
+                bootbox.alert(msg)
             }
         })
 
-        //4. 最新资讯
-        article.getLastest().then(function(res){
-            console.log(res);
-            if(res.code === 200){
-                // 渲染
-                var htmlStr = template('tmpNews',res)
-                console.log(htmlStr);
-                $('#news_list').html(htmlStr )
+        // 一周热门排行榜  
+        article.rank().then(res => {
+            let {
+                code,
+                msg,
+            } = res
+            if (code === 200) {
+                // 热门排行模板
+                let htmlStr = template('tem_hot', res)
+                $("#hot_rank").html(htmlStr)
             } else {
-                alert(res.msg)
+                bootbox.alert(msg)
             }
+        })
+
+        // 热门 图片说明
+        article.hotImg().then(res => {
+            let {
+                code,
+                msg,
+            } = res
+            if (code === 200) {
+                // 图片说明模板
+                let htmlStr = template('tem_caption', res);
+                $("#caption").html(htmlStr)
+            } else {
+                bootbox.alert(msg)
+            }
+        })
+
+
+        // 最新资讯
+        article.lastest().then(res => {
+            let news_info = template('tem_news', res)
+            $("#news").html(news_info)
+
         })
     </script>
 </body>
